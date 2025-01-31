@@ -6,21 +6,29 @@ const rl = readline.createInterface({
 
 let luettelo = [];
 
-function aloitusValikko() {
-  rl.question(
-    "Tervetuloa puhelinluetteloon! \r Paina (y) jos haluat jatkaa. Paina (x) jos haluat poistua: ",
-    (vastaus) => {
-      if (vastaus === "x") {
+function mainValikko() {
+  console.log("\n Puhelinluettelo ");
+  console.log("1. Lisää henkilö");
+  console.log("2. Etsi henkilö");
+  console.log("3. Poistu");
+  rl.question("Valitse toiminto (1, 2, 3): ", (vastaus) => {
+    switch (vastaus) {
+      case "1":
+        kysyNimi();
+        break;
+      case "2":
+        etsiHenkilo(luettelo);
+        break;
+      case "3":
         console.log("Heippa!");
         rl.close();
-      } else if (vastaus === "y") {
-        kysyNimi(); // Siirrytään kysymään käyttäjän nimeä
-      } else {
-        console.log("Virheellinen syöte, yritä uudelleen.");
-        aloitusValikko(); // Palaa alkuun
-      }
+        break;
+      default:
+        console.log("Virheellinen valinta, yritä uudelleen.");
+        mainValikko();
+        break;
     }
-  );
+  });
 }
 
 function kysyNimi() {
@@ -35,20 +43,7 @@ function kysyNimi() {
           `Lisätty henkilö:  ${uusiHenkilo.etuNimi} ${uusiHenkilo.sukuNimi} Puhelinnro:  ${uusiHenkilo.puhelinNumero}`
         );
         lisaaHenkilo(uusiHenkilo);
-        // Kysytään, haluaako käyttäjä lisätä uuden käyttäjän
-        rl.question(
-          "Haluatko lisätä uuden käyttäjän? Paina (y) jatkaaksesi tai  Etsi henkilö painamalla (f) poistuaksesi: paina (x) ",
-          (vastaus) => {
-            if (vastaus === "y") {
-              kysyNimi(); // Kysytään uudelleen
-            } else if (vastaus === "f") {
-              etsiHenkilo();
-            } else if (vastaus === "x") {
-              console.log("Heippa!");
-              rl.close(); // Palaa kysymykseen
-            }
-          }
-        );
+        mainValikko(); // Palaa päävalikkoon
       });
     });
   });
@@ -56,31 +51,35 @@ function kysyNimi() {
 
 function lisaaHenkilo(uusiHenkilo) {
   luettelo.push(uusiHenkilo);
-  console.log(luettelo);
+  console.log("Henkilö lisätty onnistuneesti.");
 }
 
-function etsiHenkilo() {
-  rl.question("Anna etunimi tai sukunimi etsintään: ", (nimi) => {
-    let tulokset = luettelo.filter(
-      (henkilo) =>
-        henkilo.etuNimi.toLowerCase().includes(nimi.toLowerCase()) ||
-        henkilo.sukuNimi.toLowerCase().includes(nimi.toLowerCase())
-    );
+function etsiHenkilo(henkiloLista) {
+  rl.question(
+    "Anna etunimi, sukunimi tai puhelinnumero etsintään: ",
+    (hakusana) => {
+      let tulokset = henkiloLista.filter(
+        (henkilo) =>
+          henkilo.etuNimi.toLowerCase().includes(hakusana.toLowerCase()) ||
+          henkilo.sukuNimi.toLowerCase().includes(hakusana.toLowerCase()) ||
+          henkilo.puhelinNumero.includes(hakusana)
+      );
 
-    if (tulokset.length > 0) {
-      console.log("Löydetyt henkilöt:");
-      tulokset.forEach((henkilo, index) => {
-        console.log(
-          `${index + 1}. ${henkilo.etuNimi} ${
-            henkilo.sukuNimi
-          }, Puhelinnumero: ${henkilo.puhelinNumero}`
-        );
-        aloitusValikko();
-      });
-    } else {
-      console.log("Henkilöä ei löytynyt.");
+      if (tulokset.length > 0) {
+        console.log("Löydetyt henkilöt:");
+        tulokset.forEach((henkilo, index) => {
+          console.log(
+            `${index + 1}. ${henkilo.etuNimi} ${
+              henkilo.sukuNimi
+            }, Puhelinnumero: ${henkilo.puhelinNumero}`
+          );
+        });
+      } else {
+        console.log("Henkilöä ei löytynyt.");
+      }
+      mainValikko(); // Palaa päävalikkoon
     }
-  });
+  );
 }
 
-aloitusValikko();
+mainValikko();
