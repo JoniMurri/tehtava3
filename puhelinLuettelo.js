@@ -10,8 +10,9 @@ function mainValikko() {
   console.log("\n Puhelinluettelo ");
   console.log("1. Lisää henkilö");
   console.log("2. Etsi henkilö");
-  console.log("3. Poistu");
-  rl.question("Valitse toiminto (1, 2, 3): ", (vastaus) => {
+  console.log("3. Selaa luetteloa");
+  console.log("4. Poistu");
+  rl.question("Valitse toiminto (1, 2, 3, 4): ", (vastaus) => {
     switch (vastaus) {
       case "1":
         kysyNimi();
@@ -20,6 +21,9 @@ function mainValikko() {
         etsiHenkilo(luettelo);
         break;
       case "3":
+        selaaHenkilot(luettelo);
+        break;
+      case "4":
         console.log("Heippa!");
         rl.close();
         break;
@@ -54,11 +58,11 @@ function lisaaHenkilo(uusiHenkilo) {
   console.log("Henkilö lisätty onnistuneesti.");
 }
 
-function etsiHenkilo(henkiloLista) {
+function etsiHenkilo(luettelo) {
   rl.question(
     "Anna etunimi, sukunimi tai puhelinnumero etsintään: ",
     (hakusana) => {
-      let tulokset = henkiloLista.filter(
+      let tulokset = luettelo.filter(
         (henkilo) =>
           henkilo.etuNimi.toLowerCase().includes(hakusana.toLowerCase()) ||
           henkilo.sukuNimi.toLowerCase().includes(hakusana.toLowerCase()) ||
@@ -80,6 +84,22 @@ function etsiHenkilo(henkiloLista) {
       mainValikko(); // Palaa päävalikkoon
     }
   );
+}
+
+function selaaHenkilot(luettelo) {
+  if (luettelo.length === 0) {
+    console.log("Puhelinluettelo on tyhjä.");
+  } else {
+    console.log("\nPuhelinluettelon henkilöt:");
+    luettelo.forEach((henkilo, index) => {
+      console.log(
+        `${index + 1}. ${henkilo.etuNimi} ${henkilo.sukuNimi}, Puhelinnumero: ${
+          henkilo.puhelinNumero
+        }`
+      );
+    });
+  }
+  mainValikko(); // Palaa päävalikkoon
 }
 
 mainValikko();
