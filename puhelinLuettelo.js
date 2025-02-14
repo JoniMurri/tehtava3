@@ -3,7 +3,7 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
+//tallennetaan paikallisesti.
 let luettelo = [];
 
 function mainValikko() {
@@ -18,7 +18,7 @@ function mainValikko() {
         kysyNimi();
         break;
       case "2":
-        rl.question("Anna etunimi, sukunimi tai puhelinnumero: ", (nimi) => {
+        rl.question("Anna etsittävän nimi: ", (nimi) => {
           etsiHenkilo(luettelo, nimi);
         });
         break;
@@ -54,27 +54,29 @@ function kysyNimi() {
     });
   });
 }
-
+// lisää henkilön luetteloon
 function lisaaHenkilo(uusiHenkilo) {
   luettelo.push(uusiHenkilo);
   console.log("Henkilö lisätty onnistuneesti.");
 }
-
+//
 function etsiHenkilo(luettelo, nimi) {
   let tulokset = luettelo.filter(
     (henkilo) =>
       henkilo.etuNimi.toLowerCase().includes(nimi.toLowerCase()) ||
       henkilo.sukuNimi.toLowerCase().includes(nimi.toLowerCase()) ||
-      henkilo.puhelinNumero.includes(nimi)
+      `${henkilo.etuNimi} ${henkilo.sukuNimi}`
+        .toLowerCase()
+        .includes(nimi.toLowerCase())
   );
 
   if (tulokset.length > 0) {
     console.log("Löydetyt henkilöt:");
     tulokset.forEach((henkilo, index) => {
       console.log(
-        `${index + 1}. ${henkilo.etuNimi} ${henkilo.sukuNimi}, Puhelinnumero: ${
-          henkilo.puhelinNumero
-        }`
+        `${index + 1}. ${
+          henkilo.etuNimi + "" + henkilo.sukuNimi
+        } Puhelinnumero: ${henkilo.puhelinNumero}`
       );
     });
   } else {
