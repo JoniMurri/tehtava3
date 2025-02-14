@@ -18,7 +18,9 @@ function mainValikko() {
         kysyNimi();
         break;
       case "2":
-        etsiHenkilo(luettelo);
+        rl.question("Anna etunimi, sukunimi tai puhelinnumero: ", (nimi) => {
+          etsiHenkilo(luettelo, nimi);
+        });
         break;
       case "3":
         selaaHenkilot(luettelo);
@@ -58,32 +60,27 @@ function lisaaHenkilo(uusiHenkilo) {
   console.log("Henkilö lisätty onnistuneesti.");
 }
 
-function etsiHenkilo(luettelo) {
-  rl.question(
-    "Anna etunimi, sukunimi tai puhelinnumero etsintään: ",
-    (hakusana) => {
-      let tulokset = luettelo.filter(
-        (henkilo) =>
-          henkilo.etuNimi.toLowerCase().includes(hakusana.toLowerCase()) ||
-          henkilo.sukuNimi.toLowerCase().includes(hakusana.toLowerCase()) ||
-          henkilo.puhelinNumero.includes(hakusana)
-      );
-
-      if (tulokset.length > 0) {
-        console.log("Löydetyt henkilöt:");
-        tulokset.forEach((henkilo, index) => {
-          console.log(
-            `${index + 1}. ${henkilo.etuNimi} ${
-              henkilo.sukuNimi
-            }, Puhelinnumero: ${henkilo.puhelinNumero}`
-          );
-        });
-      } else {
-        console.log("Henkilöä ei löytynyt.");
-      }
-      mainValikko(); // Palaa päävalikkoon
-    }
+function etsiHenkilo(luettelo, nimi) {
+  let tulokset = luettelo.filter(
+    (henkilo) =>
+      henkilo.etuNimi.toLowerCase().includes(nimi.toLowerCase()) ||
+      henkilo.sukuNimi.toLowerCase().includes(nimi.toLowerCase()) ||
+      henkilo.puhelinNumero.includes(nimi)
   );
+
+  if (tulokset.length > 0) {
+    console.log("Löydetyt henkilöt:");
+    tulokset.forEach((henkilo, index) => {
+      console.log(
+        `${index + 1}. ${henkilo.etuNimi} ${henkilo.sukuNimi}, Puhelinnumero: ${
+          henkilo.puhelinNumero
+        }`
+      );
+    });
+  } else {
+    console.log("Henkilöä ei löytynyt.");
+  }
+  mainValikko(); // Palaa päävalikkoon
 }
 
 function selaaHenkilot(luettelo) {
