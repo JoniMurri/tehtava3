@@ -79,6 +79,7 @@ function etsiHenkilo(luettelo, nimi) {
         } Puhelinnumero: ${henkilo.puhelinNumero}`
       );
     });
+    return tulokset[0].puhelinNumero;
   } else {
     console.log("Henkilöä ei löytynyt.");
   }
